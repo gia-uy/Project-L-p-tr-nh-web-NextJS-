@@ -1,0 +1,5 @@
+node_modules/
+.next/
+backend/.env
+frontend/.env.local
+*.zip
