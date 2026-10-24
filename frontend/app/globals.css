@@ -50,6 +50,9 @@ h1 em, h2 em { color: #817198; font-weight: 400; }
 .hero-note { margin-top: 30px; display: flex; align-items: center; gap: 9px; color: #88858d; font-size: 10px; }
 .avatar-stack { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: #e9e1f2; color: #75648c; }
 .hero-art { height: 357px; max-width: 510px; justify-self: end; width: 100%; position: relative; overflow: hidden; border-radius: 48% 48% 4px 4px; background: linear-gradient(157deg, #eee6f4 0%, #f6e7e6 52%, #ebeee3 100%); }
+.hero-art.has-image { background-size: cover; background-position: center; }
+.hero-slide-image { position: absolute; inset: 0; background-size: cover; background-position: center; animation: hero-slide-in .7s ease both; }
+@keyframes hero-slide-in { from { opacity: .45; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
 .sun { width: 102px; height: 102px; border-radius: 50%; background: #f3d6c4; position: absolute; top: 61px; right: 102px; opacity: .9; }
 .mountain { position: absolute; bottom: 0; width: 0; height: 0; }
 .mountain-back { left: -9%; border-left: 230px solid transparent; border-right: 240px solid transparent; border-bottom: 212px solid #c7bad7; }
@@ -57,6 +60,10 @@ h1 em, h2 em { color: #817198; font-weight: 400; }
 .mountain-front { right: -18%; border-left: 270px solid transparent; border-right: 280px solid transparent; border-bottom: 175px solid #9fae9e; }
 .mountain-front:after { content: ""; position: absolute; top: 5px; left: -25px; width: 0; height: 0; border-left: 24px solid transparent; border-right: 24px solid transparent; border-bottom: 35px solid #f1e9eb; }
 .hero-art-caption { position: absolute; bottom: 19px; left: 23px; right: 23px; z-index: 1; display: flex; justify-content: space-between; color: white; font-size: 8px; letter-spacing: 1.1px; text-shadow: 0 1px 5px #5557; }
+.hero-slide-controls { position: absolute; z-index: 2; right: 20px; bottom: 52px; display: flex; gap: 6px; }
+.hero-slide-controls button { width: 29px; height: 29px; display: grid; place-items: center; padding: 0 0 3px; border: 1px solid #ffffffa6; border-radius: 50%; background: #302a3c4d; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; transition: background .2s, transform .2s; }
+.hero-slide-controls button:hover { background: #302a3c99; transform: scale(1.06); }
+.hero-art.has-image .hero-stamp { border-color: #ffffffa6; color: white; background: #302a3c33; }
 .hero-stamp { position: absolute; z-index: 2; right: 24px; top: 25px; width: 53px; height: 53px; border: 1px solid #675a6a8c; border-radius: 50%; display: grid; place-content: center; text-align: center; color: #60536d; font-size: 8px; line-height: 1.35; letter-spacing: 1px; transform: rotate(12deg); }
 .hero-side-label { position: absolute; right: 18px; top: 50%; writing-mode: vertical-rl; color: #aaa4ad; font-size: 8px; letter-spacing: 2px; }
 .section { max-width: 1220px; margin: 0 auto; padding: 58px 72px 80px; }

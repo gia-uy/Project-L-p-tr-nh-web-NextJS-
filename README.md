@@ -59,6 +59,4 @@
 
 Từ thư mục cha `N23DCPT056_De05`, tạo ZIP chỉ chứa `backend`, `frontend` và `README.md`; bỏ qua `node_modules`, `.next` và các file môi trường chứa thông tin kết nối. Không nộp `.env`/`.env.local`; dùng các file `.env.example` để hướng dẫn cấu hình.
 
-## Chưa làm
-
-- Chưa có đăng nhập, phân quyền, thanh toán hoặc gửi email xác nhận vì không thuộc yêu cầu đề.
+## Đã hoàn thành các yêu cầu của đề bài

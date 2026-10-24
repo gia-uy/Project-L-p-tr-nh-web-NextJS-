@@ -5,6 +5,13 @@ import Link from "next/link";
 import { apiRequest } from "../lib/api";
 import { formatCurrency, formatDate } from "../lib/format";
 
+const heroSlides = [
+  { image: "/images/A001.jpg", alt: "Rừng thông Đà Lạt trong làn sương sớm", destination: "Đà Lạt, Việt Nam" },
+  { image: "/images/A002.jpg", alt: "Những mái nhà vàng bên sông ở Hội An", destination: "Hội An, Việt Nam" },
+  { image: "/images/A003.jpg", alt: "Biển xanh và rừng nhiệt đới ở Phú Quốc", destination: "Phú Quốc, Việt Nam" },
+  { image: "/images/A004.jpg", alt: "Chùa vàng Bangkok lúc hoàng hôn", destination: "Bangkok, Thái Lan" },
+];
+
 const emptyFilters = { q: "", diemDenId: "", thang: "", giaMax: "", conCho: false, sort: "ngayKhoiHanh", order: "asc" };
 
 export default function TourList() {
@@ -15,6 +22,20 @@ export default function TourList() {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
+
+  useEffect(() => {
+    if (isHeroPaused) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 6000);
+    return () => window.clearInterval(timer);
+  }, [activeSlide, isHeroPaused]);
+
+  function showSlide(offset) {
+    setActiveSlide((current) => (current + offset + heroSlides.length) % heroSlides.length);
+  }
 
   useEffect(() => {
     apiRequest("/diem-den?limit=100").then((data) => setDestinations(data.data)).catch((reason) => setError(reason.message));
@@ -66,12 +87,31 @@ export default function TourList() {
           <a className="button button-dark" href="#tour-list">Khám phá hành trình <span aria-hidden="true">↓</span></a>
           <div className="hero-note"><span className="avatar-stack">✦</span> Hơn 2.400+ chuyến đi đáng nhớ</div>
         </div>
-        <div className="hero-art" aria-label="Minh họa phong cảnh núi và mặt trời">
-          <div className="sun" />
-          <div className="mountain mountain-back" />
-          <div className="mountain mountain-front" />
-          <div className="hero-art-caption"><span>01 / 04</span><span>Find your somewhere</span></div>
+        <div
+          className="hero-art has-image"
+          onMouseEnter={() => setIsHeroPaused(true)}
+          onMouseLeave={() => setIsHeroPaused(false)}
+          onFocusCapture={() => setIsHeroPaused(true)}
+          onBlurCapture={() => setIsHeroPaused(false)}
+        >
+          <div
+            key={heroSlides[activeSlide].image}
+            className="hero-slide-image"
+            role="img"
+            aria-label={heroSlides[activeSlide].alt}
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(31, 28, 38, .42), rgba(31, 28, 38, .04)), url('${heroSlides[activeSlide].image}')`,
+            }}
+          />
+          <div className="hero-art-caption">
+            <span>{String(activeSlide + 1).padStart(2, "0")} / {String(heroSlides.length).padStart(2, "0")}</span>
+            <span>{heroSlides[activeSlide].destination}</span>
+          </div>
           <div className="hero-stamp">GO<br />SLOW</div>
+          <div className="hero-slide-controls" aria-label="Điều khiển ảnh hành trình">
+            <button type="button" onClick={() => showSlide(-1)} aria-label="Ảnh trước">‹</button>
+            <button type="button" onClick={() => showSlide(1)} aria-label="Ảnh tiếp theo">›</button>
+          </div>
         </div>
         <div className="hero-side-label">TRAVEL · FEEL · REMEMBER</div>
       </section>
