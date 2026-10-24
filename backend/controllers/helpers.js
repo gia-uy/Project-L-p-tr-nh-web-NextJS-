@@ -74,4 +74,16 @@ function escapeRegex(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-module.exports = { httpError, parseDate, addDays, validateTour, ensureDestination, escapeRegex };
+function validateImagePath(value) {
+  const path = String(value || "").trim();
+  if (path && (!/^\/images\/[A-Za-z0-9._/-]+$/.test(path) || path.includes(".."))) {
+    throw httpError(400, "Đường dẫn ảnh không hợp lệ", [
+      { field: "hinhAnh", message: "Dùng đường dẫn cục bộ dạng /images/ten-anh.jpg" },
+    ]);
+  }
+  return path;
+}
+
+module.exports = {
+  httpError, parseDate, addDays, validateTour, ensureDestination, escapeRegex, validateImagePath,
+};

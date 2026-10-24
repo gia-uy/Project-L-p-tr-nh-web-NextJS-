@@ -99,7 +99,7 @@ export default function TourList() {
             <div className="tour-grid">
               {result.data.map((tour, index) => {
                 const themes = ["lavender", "peach", "mint", "blue"];
-                const imagePath = tour.diemDen?.hinhAnh;
+                const imagePath = tour.hinhAnh || tour.diemDen?.hinhAnh;
                 return <article className="tour-card" key={tour.id}>
                   <Link className={`card-visual ${themes[index % themes.length]}${imagePath ? " has-image" : ""}`} href={`/tour/${tour.id}`} aria-label={`Xem ${tour.tenTour}`} style={imagePath ? { backgroundImage: `linear-gradient(0deg, rgba(31, 28, 38, .52), rgba(31, 28, 38, .04)), url("${imagePath}")` } : undefined}>
                     <span className="card-number">0{(page - 1) * 5 + index + 1}</span>

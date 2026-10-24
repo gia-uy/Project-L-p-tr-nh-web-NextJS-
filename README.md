@@ -14,7 +14,7 @@
 ## Cấu hình và chạy
 
 1. Backend: sao chép `backend/.env.example` thành `backend/.env`, sửa `MONGODB_URI` theo môi trường MongoDB của bạn. Backend chạy cổng `5020`.
-2. Tạo dữ liệu mẫu (12 điểm đến, 12 tour với điểm đến riêng cho từng tour; lệnh seed cập nhật theo mã tour và không xóa dữ liệu khác):
+2. Tạo dữ liệu mẫu (4 điểm đến, 12 tour; có tour gần kín chỗ và tour chứa MSSV. Seed cập nhật theo tên điểm đến/mã tour, chỉ dọn điểm đến mẫu cũ khi không còn tour sử dụng và không xóa dữ liệu khác):
 
    ```powershell
    cd backend
@@ -40,7 +40,7 @@
 - Đặt chỗ có kiểm tra ngày khởi hành và số chỗ theo cập nhật nguyên tử; không xóa tour đã có khách hoặc giảm sức chứa thấp hơn số đã đặt.
 - Thống kê số tour, chỗ đặt theo điểm đến và doanh thu dự kiến.
 - Frontend gồm danh sách/tìm kiếm/lọc/phân trang, chi tiết/đặt chỗ, form thêm sửa tour, quản lý điểm đến và thống kê.
-- Có thể gắn ảnh cho điểm đến: chép file vào `frontend/public/images/` rồi nhập đường dẫn như `/images/da-lat.jpg` trong trang quản lý điểm đến. Ảnh điểm đến sẽ hiện trên thẻ điểm đến, danh sách tour và trang chi tiết tour. Hỗ trợ ảnh JPG, PNG, WebP hoặc AVIF với tên file không dấu, dùng chữ/số, dấu gạch ngang hoặc gạch dưới.
+- Có thể gắn ảnh riêng cho từng tour trong form thêm/sửa tour, hoặc ảnh chung cho điểm đến trong trang quản lý điểm đến. Chép file vào `frontend/public/images/` rồi nhập đường dẫn như `/images/A001.jpg`. 12 tour seed dùng riêng các ảnh `/images/A001.jpg` đến `/images/A012.jpg`. Ảnh tour được ưu tiên trên danh sách và trang chi tiết; nếu để trống sẽ dùng ảnh của điểm đến. Hỗ trợ JPG, PNG, WebP hoặc AVIF với tên file dùng chữ/số, dấu gạch ngang hoặc gạch dưới.
 - Header/footer dùng chung; mọi response Backend có `X-Student-Id: N23DCPT056`; footer hiển thị họ tên, MSSV và số đề.
 
 ## API chính

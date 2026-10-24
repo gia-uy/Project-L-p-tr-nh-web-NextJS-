@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { apiRequest, jsonBody } from "../lib/api";
 
 const blankTour = {
-  maTour: "", tenTour: "", ngayKhoiHanh: "", soNgay: 3, giaNguoiLon: "", soChoToiDa: 20, soChoDaDat: 0, diemDenId: "",
+  maTour: "", tenTour: "", ngayKhoiHanh: "", soNgay: 3, giaNguoiLon: "", soChoToiDa: 20, soChoDaDat: 0, diemDenId: "", hinhAnh: "",
 };
 
 export default function TourForm({ tourId }) {
@@ -28,7 +28,7 @@ export default function TourForm({ tourId }) {
       if (tour) setForm({
         maTour: tour.maTour, tenTour: tour.tenTour, ngayKhoiHanh: new Date(tour.ngayKhoiHanh).toISOString().slice(0, 10),
         soNgay: tour.soNgay, giaNguoiLon: tour.giaNguoiLon, soChoToiDa: tour.soChoToiDa,
-        soChoDaDat: tour.soChoDaDat, diemDenId: tour.diemDenId,
+        soChoDaDat: tour.soChoDaDat, diemDenId: tour.diemDenId, hinhAnh: tour.hinhAnh || "",
       });
     }).catch((error) => setLoadError(error.message)).finally(() => setLoading(false));
   }, [editing, tourId]);
@@ -94,7 +94,9 @@ export default function TourForm({ tourId }) {
         {field("soChoToiDa", "Số chỗ tối đa", <input type="number" min="10" max="50" name="soChoToiDa" value={form.soChoToiDa} onChange={updateField} aria-invalid={Boolean(errors.soChoToiDa)} />, `Hiện đã đặt ${form.soChoDaDat} chỗ.`)}
         {editing && field("soChoDaDat", "Số chỗ đã đặt", <input type="number" name="soChoDaDat" value={form.soChoDaDat} disabled />, "Số chỗ được cập nhật khi khách đặt tour.")}
         {field("diemDenId", "Điểm đến", <select name="diemDenId" value={form.diemDenId} onChange={updateField} aria-invalid={Boolean(errors.diemDenId)}><option value="">Chọn điểm đến</option>{destinations.map((item) => <option key={item.id} value={item.id}>{item.ten} · {item.quocGia}</option>)}</select>)}
+        {field("hinhAnh", "Ảnh riêng của tour", <input name="hinhAnh" value={form.hinhAnh} onChange={updateField} placeholder="/images/A001.jpg" aria-invalid={Boolean(errors.hinhAnh)} />, "Chép ảnh vào frontend/public/images/ rồi nhập /images/tên-ảnh.jpg. Có thể để trống để dùng ảnh điểm đến.")}
       </div>
+      {form.hinhAnh && <div className="destination-image-preview" style={{ backgroundImage: `url("${form.hinhAnh}")` }} role="img" aria-label="Xem trước ảnh tour"><span>Xem trước ảnh tour</span></div>}
       <div className="form-actions"><Link className="button button-outline" href={editing ? `/tour/${tourId}` : "/"}>Hủy</Link><button className="button button-dark" disabled={saving}>{saving ? "Đang lưu..." : editing ? "Lưu thay đổi ↗" : "Tạo hành trình ↗"}</button></div>
     </form>
   </section>;

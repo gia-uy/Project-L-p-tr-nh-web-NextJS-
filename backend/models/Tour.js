@@ -13,6 +13,7 @@ const tourSchema = new mongoose.Schema(
     soChoToiDa: { type: Number, required: true, min: 10, max: 50 },
     soChoDaDat: { type: Number, required: true, min: 0, default: 0 },
     diemDenId: { type: String, required: true, index: true },
+    hinhAnh: { type: String, trim: true, default: "" },
   },
   { timestamps: true, versionKey: false },
 );

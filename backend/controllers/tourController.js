@@ -1,7 +1,7 @@
 const Tour = require("../models/Tour");
 const DiemDen = require("../models/DiemDen");
 const {
-  httpError, parseDate, addDays, validateTour, ensureDestination, escapeRegex,
+  httpError, parseDate, addDays, validateTour, ensureDestination, escapeRegex, validateImagePath,
 } = require("./helpers");
 
 async function withDestination(tour) {
@@ -71,6 +71,7 @@ async function create(req, res) {
     soChoToiDa: Number(input.soChoToiDa),
     soChoDaDat: Number(input.soChoDaDat || 0),
     diemDenId: String(input.diemDenId),
+    hinhAnh: validateImagePath(input.hinhAnh),
   });
   res.status(201).json(await withDestination(item.toObject()));
 }
@@ -96,6 +97,7 @@ async function update(req, res) {
   item.soChoToiDa = Number(input.soChoToiDa);
   item.soChoDaDat = Number(input.soChoDaDat);
   item.diemDenId = String(input.diemDenId);
+  item.hinhAnh = validateImagePath(input.hinhAnh);
   await item.save();
   res.json(await withDestination(item.toObject()));
 }

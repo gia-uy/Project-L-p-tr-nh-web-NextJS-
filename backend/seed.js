@@ -10,18 +10,10 @@ async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
 
   const destinationData = [
-    { ten: "Đà Lạt", quocGia: "Việt Nam",hinhAnh: "/public/images/A001.jpg" },
-    { ten: "Hội An", quocGia: "Việt Nam",hinhAnh: "/public/images/A002.jpg" },
-    { ten: "Phú Quốc", quocGia: "Việt Nam",hinhAnh: "/public/images/A003.jpg" },
-    { ten: "Bangkok", quocGia: "Thái Lan",hinhAnh: "/public/images/A004.jpg" },
-    { ten: "Kyoto", quocGia: "Nhật Bản",hinhAnh: "/public/images/A005.jpg" },
-    { ten: "Nha Trang", quocGia: "Việt Nam",hinhAnh: "/public/images/A006.jpg" },
-    { ten: "Sa Pa", quocGia: "Việt Nam",hinhAnh: "/public/images/A007.jpg" },
-    { ten: "Singapore", quocGia: "Singapore",hinhAnh: "/public/images/A008.jpg" },
-    { ten: "Bali", quocGia: "Indonesia",hinhAnh: "/public/images/A009.jpg" },
-    { ten: "Osaka", quocGia: "Nhật Bản",hinhAnh: "/public/images/A010.jpg" },
-    { ten: "Hà Giang", quocGia: "Việt Nam",hinhAnh: "/public/images/A011.jpg" },
-    { ten: "Huế", quocGia: "Việt Nam",hinhAnh: "/public/images/A012.jpg" },
+    { ten: "Đà Lạt", quocGia: "Việt Nam", hinhAnh: "/images/A001.jpg" },
+    { ten: "Hội An", quocGia: "Việt Nam", hinhAnh: "/images/A002.jpg" },
+    { ten: "Phú Quốc", quocGia: "Việt Nam", hinhAnh: "/images/A003.jpg" },
+    { ten: "Bangkok", quocGia: "Thái Lan", hinhAnh: "/images/A004.jpg" },
   ];
   await DiemDen.bulkWrite(destinationData.map((item) => ({
     updateOne: { filter: { ten: item.ten }, update: { $set: item }, upsert: true },
@@ -37,16 +29,16 @@ async function seed() {
     ["T002", "Phố cổ Hội An – ký ức miền Trung", 20, 2, 3200000, 18, 9, 1],
     ["T003", "Nghỉ dưỡng biển Phú Quốc", 30, 4, 8900000, 30, 12, 2],
     ["T004", "Khám phá Bangkok cuối tuần", 45, 3, 6200000, 24, 16, 3],
-    ["T005", "Mùa lá đỏ Kyoto", 60, 6, 18900000, 20, 7, 4],
-    ["T006", "N23DCPT056 – Biển xanh Nha Trang", 75, 3, 5100000, 15, 12, 5],
-    ["T007", "Chạm mây trên đỉnh Sa Pa", 90, 3, 5900000, 28, 8, 6],
-    ["T008", "Singapore – thành phố vườn", 105, 4, 9700000, 35, 10, 7],
-    ["T009", "Bali – bình minh bên biển", 120, 5, 12400000, 26, 5, 8],
-    ["T010", "Osaka – sắc xuân Nhật Bản", 150, 4, 22500000, 32, 11, 9],
-    ["T011", "Cung đường Hà Giang ", 180, 3, 4800000, 20, 19, 10],
-    ["T012", "Huế – dấu xưa Cố đô", 210, 2, 3500000, 22, 0, 11],
+    ["T005", "Dạo bước giữa vườn hoa Đà Lạt", 60, 4, 6800000, 20, 7, 0],
+    ["T006", "N23DCPT056 – Hoàng hôn Phú Quốc", 8, 3, 5100000, 15, 12, 2],
+    ["T007", "Làng nghề và đèn lồng Hội An", 90, 2, 3900000, 28, 8, 1],
+    ["T008", "Bangkok qua những khu chợ đêm", 105, 4, 9700000, 35, 10, 3],
+    ["T009", "Phú Quốc – khám phá đảo nhỏ", 120, 5, 12400000, 26, 5, 2],
+    ["T010", "Ẩm thực đường phố Bangkok", 150, 4, 22500000, 32, 11, 3],
+    ["T011", "Đà Lạt cảnh rừng – gần kín chỗ", 5, 3, 4800000, 20, 19, 0],
+    ["T012", " Ẩm thực Hội An ", 210, 2, 3500000, 22, 0, 1],
   ];
-  const tourData = samples.map(([maTour, tenTour, offset, soNgay, gia, max, booked, destinationIndex]) => {
+  const tourData = samples.map(([maTour, tenTour, offset, soNgay, gia, max, booked, destinationIndex], index) => {
     const ngayKhoiHanh = addDays(today, offset);
     return {
       maTour,
@@ -58,16 +50,21 @@ async function seed() {
       soChoToiDa: max,
       soChoDaDat: booked,
       diemDenId: destinations[destinationIndex].id,
+      hinhAnh: `/images/A${String(index + 1).padStart(3, "0")}.jpg`,
     };
   });
   await Tour.bulkWrite(tourData.map((item) => ({
     updateOne: { filter: { maTour: item.maTour }, update: { $set: item }, upsert: true },
   })));
-  await DiemDen.deleteMany({
-    ten: { $in: ["Bangkok", "Kyoto"] },
-    id: { $nin: tourData.map((item) => item.diemDenId) },
-  });
-  console.log(`Đã tạo ${destinations.length} điểm đến và ${samples.length} tour mẫu, mỗi tour có điểm đến riêng.`);
+  const obsoleteSeedDestinations = await DiemDen.find({
+    ten: { $in: ["Kyoto", "Nha Trang", "Sa Pa", "Singapore", "Bali", "Osaka", "Hà Giang", "Huế"] },
+  }).select("id");
+  for (const destination of obsoleteSeedDestinations) {
+    if (!(await Tour.exists({ diemDenId: destination.id }))) {
+      await destination.deleteOne();
+    }
+  }
+  console.log(`Đã tạo/cập nhật ${destinations.length} điểm đến và ${samples.length} tour mẫu.`);
 }
 
 seed()
